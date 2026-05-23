@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<!-- saved from url=(0074)file:///Users/rosannatrasatti/Downloads/executive-decision-playbook_5.html -->
+<html lang="en" style="--brick: #bd9c90; --suit-color: #bd9c90; --font-display: &#39;Times New Roman&#39;,serif;"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Executive Decision Playbook · Eleva</title>
+<link href="./Executive Decision Playbook · Eleva_files/css2" rel="stylesheet">
+<style>
+/* ─── DESIGN TOKENS — edit these to restyle the whole page ─── */
+:root {
+  --navy:        #0e2a43;
+  --teal:        #0f4c63;
+  --teal-light:  #448684;
+  --teal-pale:   #c3d2d8;
+  --brick:       #8d574a;
+  --brick-50:    #bd9c90;
+  --cream:       #f4f6f7;
+  --white:       #ffffff;
+  --text-dark:   #0e2a43;
+  --text-mid:    #3a5068;
+
+  /* Card rank letter color — currently white */
+  --rank-color:  #ffffff;
+  /* Card rank suit color — brick */
+  --suit-color:  #8d574a;
+  /* Card face background */
+  --card-face:   #0e2a43;
+  /* Accent rule / border */
+  --accent:      #448684;
+
+  /* Typography sizes */
+  --size-h1:     52px;
+  --size-h2:     32px;
+  --size-h3:     22px;
+  --size-rank:   44px;
+  --size-body:   14px;
+  --size-small:  13px;
+  --size-label:  10px;
+
+  /* Font families */
+  --font-display: 'Cormorant Garamond', 'Times New Roman', serif;
+  --font-body:    'Lato', 'Verdana', sans-serif;
+  --font-mono:    'Courier New', monospace;
+}
+
+/* ─── RESET ─── */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--cream);
+  color: var(--text-dark);
+  min-height: 100vh;
+}
+
+/* ─── EDIT MODE ─── */
+#toolbar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 2000;
+  background: var(--navy);
+  border-bottom: 2px solid var(--teal-light);
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  transform: translateY(-100%);
+  transition: transform 0.25s ease;
+}
+#toolbar.visible { transform: translateY(0); }
+
+#toolbar label {
+  font-size: 11px;
+  color: rgba(255,255,255,0.5);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+#toolbar input[type="color"] {
+  width: 30px; height: 24px;
+  border: 1px solid rgba(255,255,255,0.2);
+  background: none;
+  cursor: pointer;
+  padding: 1px;
+  border-radius: 2px;
+}
+
+#toolbar select, #toolbar input[type="number"] {
+  background: rgba(255,255,255,0.1);
+  color: white;
+  border: 1px solid rgba(255,255,255,0.2);
+  padding: 4px 8px;
+  font-size: 12px;
+  border-radius: 2px;
+  cursor: pointer;
+}
+
+#toolbar input[type="number"] { width: 56px; }
+
+.toolbar-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding-right: 16px;
+  border-right: 1px solid rgba(255,255,255,0.15);
+}
+.toolbar-group:last-child { border-right: none; }
+
+#edit-toggle {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 2000;
+  background: var(--teal);
+  color: white;
+  border: none;
+  padding: 11px 22px;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  border-radius: 3px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+  transition: background 0.2s;
+}
+#edit-toggle:hover { background: var(--navy); }
+#edit-toggle.active { background: var(--brick); }
+
+/* Editable highlight */
+[contenteditable="true"] {
+  outline: none;
+  cursor: text;
+  border-radius: 2px;
+  transition: background 0.15s;
+}
+[contenteditable="true"]:hover {
+  background: rgba(68,134,132,0.08);
+}
+[contenteditable="true"]:focus {
+  background: rgba(68,134,132,0.12);
+  box-shadow: inset 0 -2px 0 var(--teal-light);
+}
+
+/* ─── HEADER ─── */
+.page-header {
+  background: var(--navy);
+  padding: 56px 60px 44px;
+  position: relative;
+  overflow: hidden;
+  margin-top: 0;
+}
+.page-header::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    -45deg, transparent, transparent 40px,
+    rgba(68,134,132,0.07) 40px, rgba(68,134,132,0.07) 41px
+  );
+}
+.header-inner { position: relative; z-index: 1; max-width: 860px; }
+
+.eleva-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.logo-text {
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 300;
+  color: rgba(255,255,255,0.75);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+}
+
+.header-eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--brick);
+  margin-bottom: 12px;
+}
+.header-title {
+  font-family: var(--font-display);
+  font-size: var(--size-h1);
+  font-weight: 300;
+  line-height: 1.08;
+  color: var(--white);
+  margin-bottom: 10px;
+}
+.header-title em {
+  font-style: italic;
+  color: var(--brick);
+}
+.header-subtitle {
+  font-size: 15px;
+  font-weight: 300;
+  color: var(--teal-light);
+  letter-spacing: 0.02em;
+}
+.header-suits {
+  position: absolute;
+  top: 44px;
+  right: 60px;
+  display: flex;
+  gap: 12px;
+}
+.header-suits span {
+  font-size: 26px;
+  color: rgba(255,255,255,0.18);
+}
+.header-suits .diamond { color: var(--brick); }
+
+/* ─── PRE-SECTION ─── */
+.pre-section {
+  background: var(--teal);
+  padding: 32px 60px;
+  border-bottom: 3px solid var(--teal-light);
+}
+.pre-section-title {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-style: italic;
+  font-weight: 400;
+  color: rgba(255,255,255,0.8);
+  margin-bottom: 16px;
+}
+.pre-items {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+.pre-item {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.14);
+  border-radius: 4px;
+  padding: 14px 18px;
+  flex: 1;
+  min-width: 240px;
+  color: rgba(255,255,255,0.88);
+  font-size: 14px;
+  line-height: 1.6;
+}
+.pre-item::before {
+  content: '◆';
+  color: var(--teal-pale);
+  font-size: 9px;
+  display: block;
+  margin-bottom: 7px;
+}
+
+/* ─── MAIN ─── */
+.main-content {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 50px 40px 60px;
+}
+
+/* Section headers */
+.section-header { margin-bottom: 28px; }
+.section-label {
+  font-size: var(--size-label);
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--brick);
+  margin-bottom: 5px;
+}
+.section-title {
+  font-family: var(--font-display);
+  font-size: var(--size-h2);
+  font-weight: 300;
+  color: var(--navy);
+}
+.teal-rule {
+  height: 2px;
+  width: 50px;
+  background: var(--teal-light);
+  margin-top: 10px;
+}
+
+/* ─── PRINCIPLE CARDS ─── */
+.principle-card {
+  display: flex;
+  background: var(--white);
+  border-radius: 5px;
+  margin-bottom: 14px;
+  overflow: hidden;
+  border: 1px solid rgba(14,42,67,0.1);
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.principle-card:hover {
+  transform: translateX(3px);
+  box-shadow: -3px 0 0 var(--teal-light), 2px 4px 18px rgba(14,42,67,0.08);
+}
+
+/* Card face (left column) */
+.card-rank {
+  width: 94px;
+  min-width: 94px;
+  background: var(--card-face);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 22px 8px;
+  gap: 4px;
+  position: relative;
+}
+.rank-letter {
+  font-family: var(--font-display);
+  font-size: var(--size-rank);
+  font-weight: 600;
+  color: var(--rank-color);
+  line-height: 1;
+  letter-spacing: -0.01em;
+}
+/* Fix: 10 uses same display font as letters but slightly smaller to fit */
+.rank-numeral {
+  font-family: var(--font-display);
+  font-size: 38px;
+  font-weight: 600;
+  color: var(--rank-color);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+.rank-suit {
+  font-size: 20px;
+  color: var(--suit-color);
+  line-height: 1;
+}
+.rank-corner {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 300;
+  color: rgba(255,255,255,0.22);
+  line-height: 1.3;
+  text-align: left;
+}
+.rank-corner-bottom {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 300;
+  color: rgba(255,255,255,0.22);
+  line-height: 1.3;
+  text-align: right;
+  transform: rotate(180deg);
+}
+
+/* Card body */
+.card-body { padding: 20px 26px; flex: 1; }
+.principle-num {
+  font-size: var(--size-label);
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--brick);
+  margin-bottom: 4px;
+}
+.principle-title {
+  font-family: var(--font-display);
+  font-size: var(--size-h3);
+  font-weight: 600;
+  color: var(--navy);
+  margin-bottom: 9px;
+  line-height: 1.2;
+}
+.principle-body {
+  font-size: var(--size-body);
+  line-height: 1.65;
+  color: var(--text-mid);
+}
+.principle-tags {
+  display: flex;
+  gap: 7px;
+  margin-top: 13px;
+  flex-wrap: wrap;
+}
+.tag {
+  font-size: 11px;
+  font-family: var(--font-mono);
+  color: var(--text-mid);
+  border: 1px solid rgba(14,42,67,0.15);
+  padding: 3px 9px;
+  border-radius: 2px;
+}
+
+/* ─── TRAPS SECTION ─── */
+.traps-section {
+  margin-top: 50px;
+  padding-top: 40px;
+  border-top: 1px solid rgba(14,42,67,0.1);
+}
+.trap-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-top: 22px;
+}
+.trap-card {
+  background: var(--white);
+  border-radius: 5px;
+  border: 1px solid rgba(14,42,67,0.1);
+  overflow: hidden;
+}
+.trap-card-header {
+  background: var(--navy);
+  padding: 13px 18px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.trap-number {
+  font-family: var(--font-body);
+  font-size: 22px;
+  font-weight: 300;
+  color: var(--teal-pale);
+  line-height: 1;
+  min-width: 24px;
+}
+.trap-name {
+  font-size: 12px;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+.trap-card-body { padding: 16px 18px; }
+.trap-what, .trap-why {
+  font-size: var(--size-small);
+  color: var(--text-mid);
+  margin-bottom: 9px;
+  line-height: 1.55;
+}
+.trap-fix {
+  background: var(--navy);
+  border-left: 3px solid var(--teal-light);
+  padding: 9px 13px;
+  border-radius: 0 3px 3px 0;
+}
+.trap-fix-label {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--teal-pale);
+  margin-bottom: 4px;
+}
+.trap-fix-text {
+  font-size: var(--size-small);
+  color: #ffffff;
+  line-height: 1.5;
+}
+.trap-fix-italic {
+  font-style: italic;
+  font-size: 12px;
+  color: var(--teal-pale);
+  margin-top: 4px;
+  display: block;
+}
+
+/* ─── SHORTHAND ─── */
+.shorthand-section {
+  margin-top: 36px;
+  background: #0e2a43;
+  border-radius: 5px;
+  padding: 26px 30px;
+}
+.shorthand-title {
+  font-family: var(--font-display);
+  font-size: 19px;
+  font-weight: 400;
+  font-style: italic;
+  color: rgba(255,255,255,0.85);
+  margin-bottom: 18px;
+}
+.shorthand-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.shorthand-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255,255,255,0.07);
+  padding: 9px 14px;
+  border-radius: 3px;
+  border: 1px solid rgba(255,255,255,0.12);
+}
+.shorthand-bias {
+  font-size: 13px;
+  font-weight: 700;
+  color: #c3d2d8;
+  min-width: 120px;
+}
+.shorthand-arrow { color: rgba(255,255,255,0.3); font-size: 13px; }
+.shorthand-action { font-size: 13px; color: rgba(255,255,255,0.85); }
+
+/* ─── FOOTER ─── */
+.page-footer {
+  background: var(--navy);
+  padding: 20px 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.footer-quote {
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-style: italic;
+  color: rgba(255,255,255,0.5);
+}
+.footer-flush {
+  font-size: 11px;
+  color: rgba(255,255,255,0.25);
+  letter-spacing: 0.1em;
+}
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 680px) {
+  .page-header, .pre-section { padding-left: 24px; padding-right: 24px; }
+  .header-title { font-size: 34px; }
+  .main-content { padding: 32px 20px 48px; }
+  .trap-grid { grid-template-columns: 1fr; }
+  .shorthand-grid { grid-template-columns: 1fr; }
+  .pre-items { flex-direction: column; }
+  .header-suits { display: none; }
+  .page-footer { padding: 16px 24px; flex-direction: column; gap: 6px; }
+}
+</style>
+</head>
+<body style="padding-top: 54px;">
+
+<!-- ─── STYLE TOOLBAR (shown in edit mode) ─── -->
+<div id="toolbar" class="visible">
+  <div class="toolbar-group">
+    <label>Card face</label>
+    <input type="color" id="c-card-face" value="#0e2a43" oninput="setVar(&#39;--card-face&#39;,this.value)">
+    <label>Rank color</label>
+    <input type="color" id="c-rank" value="#ffffff" oninput="setVar(&#39;--rank-color&#39;,this.value)">
+    <label>Suit color</label>
+    <input type="color" id="c-suit" value="#86a5b1" oninput="setVar(&#39;--suit-color&#39;,this.value)">
+  </div>
+  <div class="toolbar-group">
+    <label>Navy</label>
+    <input type="color" id="c-navy" value="#0e2a43" oninput="setVar(&#39;--navy&#39;,this.value)">
+    <label>Teal</label>
+    <input type="color" id="c-teal" value="#0f4c63" oninput="setVar(&#39;--teal&#39;,this.value)">
+    <label>Brick</label>
+    <input type="color" id="c-brick" value="#8d574a" oninput="setVar(&#39;--brick&#39;,this.value)">
+    <label>BG</label>
+    <input type="color" id="c-cream" value="#f4f6f7" oninput="setVar(&#39;--cream&#39;,this.value); document.body.style.background=this.value">
+  </div>
+  <div class="toolbar-group">
+    <label>Headline font</label>
+    <select onchange="setVar(&#39;--font-display&#39;,this.value)">
+      <option value="&#39;Cormorant Garamond&#39;,&#39;Times New Roman&#39;,serif">Cormorant Garamond</option>
+      <option value="&#39;Times New Roman&#39;,serif">Times New Roman</option>
+      <option value="Georgia,serif">Georgia</option>
+      <option value="&#39;Lato&#39;,&#39;Verdana&#39;,sans-serif">Lato (sans)</option>
+    </select>
+    <label>Body font</label>
+    <select onchange="setVar(&#39;--font-body&#39;,this.value)">
+      <option value="&#39;Lato&#39;,&#39;Verdana&#39;,sans-serif">Lato</option>
+      <option value="Verdana,sans-serif">Verdana</option>
+      <option value="&#39;Arial&#39;,sans-serif">Arial</option>
+    </select>
+  </div>
+  <div class="toolbar-group">
+    <label>H1 size</label>
+    <input type="number" value="52" min="28" max="80" oninput="setVar(&#39;--size-h1&#39;,this.value+&#39;px&#39;)">
+    <label>Body size</label>
+    <input type="number" value="14" min="11" max="20" oninput="setVar(&#39;--size-body&#39;,this.value+&#39;px&#39;)">
+    <label>Rank size</label>
+    <input type="number" value="44" min="24" max="72" oninput="setVar(&#39;--size-rank&#39;,this.value+&#39;px&#39;)">
+  </div>
+</div>
+
+<!-- ─── EDIT TOGGLE ─── -->
+<button id="edit-toggle" onclick="toggleEdit()" class="active">✓ Done Editing</button>
+
+<!-- ═══════════════════════════════════════════════
+     PAGE CONTENT
+     ═══════════════════════════════════════════════ -->
+
+<!-- HEADER -->
+<header class="page-header">
+  <div class="header-suits" aria-hidden="true">
+    <span contenteditable="true">♠</span><span contenteditable="true">♥</span><span class="diamond" contenteditable="true">♦</span><span contenteditable="true">♣</span>
+  </div>
+  <div class="header-inner">
+    <div class="header-eyebrow">Fortune COO Summit · Masterclass</div>
+    <h1 class="header-title" contenteditable="true">All In on <em contenteditable="true">Better Decisions</em></h1>
+    <p class="header-subtitle" contenteditable="true">The Executive Decision Playbook</p>
+  </div>
+</header>
+
+<!-- BEFORE YOU SIT -->
+<section class="pre-section">
+  <p class="pre-section-title" contenteditable="true">Before you sit at the table:</p>
+  <div class="pre-items">
+    <div class="pre-item" contenteditable="true">Clearly define your objectives and the order of priority</div>
+    <div class="pre-item" contenteditable="true">Know your BATNA (Best Alternative To a Negotiated Agreement) before the first card is dealt</div>
+  </div>
+</section>
+
+<!-- MAIN CONTENT -->
+<main class="main-content">
+
+  <div class="section-header">
+    <p class="section-label" contenteditable="true">Five Poker Principles</p>
+    <h2 class="section-title" contenteditable="true">For Executive Judgment</h2>
+    <div class="teal-rule"></div>
+  </div>
+
+  <!-- ACE ♦ -->
+  <article class="principle-card">
+    <div class="card-rank">
+      <div class="rank-corner" contenteditable="true">A<br>♦</div>
+      <span class="rank-letter" contenteditable="true">A</span>
+      <span class="rank-suit" contenteditable="true">♦</span>
+      <div class="rank-corner-bottom" contenteditable="true">A<br>♦</div>
+    </div>
+    <div class="card-body">
+      <p class="principle-num" contenteditable="true">Principle 01</p>
+      <h3 class="principle-title" contenteditable="true">Expected value over outcomes</h3>
+      <p class="principle-body" contenteditable="true">Good decisions can produce bad results. Bad decisions can get lucky. Judge the process, not the result. "Resulting" — mistaking a bad outcome for a bad decision — is the #1 enemy of disciplined thinking.</p>
+      <div class="principle-tags">
+        <span class="tag" contenteditable="true">Annie Duke</span>
+        <span class="tag" contenteditable="true">Resulting bias</span>
+      </div>
+    </div>
+  </article>
+
+  <!-- KING ♦ -->
+  <article class="principle-card">
+    <div class="card-rank">
+      <div class="rank-corner" contenteditable="true">K<br>♦</div>
+      <span class="rank-letter" contenteditable="true">K</span>
+      <span class="rank-suit" contenteditable="true">♦</span>
+      <div class="rank-corner-bottom" contenteditable="true">K<br>♦</div>
+    </div>
+    <div class="card-body">
+      <p class="principle-num" contenteditable="true">Principle 02</p>
+      <h3 class="principle-title" contenteditable="true">Know your decision archetype</h3>
+      <p class="principle-body" contenteditable="true">Is this a small-blind call or an all-in hand? One-way vs. two-way doors. Calibrate data appetite to stakes and time pressure — needing too much data is as dangerous as acting on too little.</p>
+      <div class="principle-tags">
+        <span class="tag" contenteditable="true">Reversibility</span>
+        <span class="tag" contenteditable="true">Competitive urgency</span>
+      </div>
+    </div>
+  </article>
+
+  <!-- QUEEN ♦ -->
+  <article class="principle-card">
+    <div class="card-rank">
+      <div class="rank-corner" contenteditable="true">Q<br>♦</div>
+      <span class="rank-letter" contenteditable="true">Q</span>
+      <span class="rank-suit" contenteditable="true">♦</span>
+      <div class="rank-corner-bottom" contenteditable="true">Q<br>♦</div>
+    </div>
+    <div class="card-body">
+      <p class="principle-num" contenteditable="true">Principle 03</p>
+      <h3 class="principle-title" contenteditable="true">Create and protect your space</h3>
+      <p class="principle-body" contenteditable="true">Making hard decisions is the job. Great players slow-play their biggest hands — they manufacture time and clarity. Know when your judgment peaks and build habits around it. Less is more. Align big decisions to your personal chronotype — when your brain is naturally at its sharpest.</p>
+      <div class="principle-tags">
+        <span class="tag" contenteditable="true">Attention management</span>
+        <span class="tag" contenteditable="true">Peak cognition</span>
+        <span class="tag" contenteditable="true">Chronotype</span>
+      </div>
+    </div>
+  </article>
+
+  <!-- JACK ♦ -->
+  <article class="principle-card">
+    <div class="card-rank">
+      <div class="rank-corner" contenteditable="true">J<br>♦</div>
+      <span class="rank-letter" contenteditable="true">J</span>
+      <span class="rank-suit" contenteditable="true">♦</span>
+      <div class="rank-corner-bottom" contenteditable="true">J<br>♦</div>
+    </div>
+    <div class="card-body">
+      <p class="principle-num" contenteditable="true">Principle 04</p>
+      <h3 class="principle-title" contenteditable="true">Know when you're on tilt</h3>
+      <p class="principle-body" contenteditable="true">Deciding from eagerness to win or fear of losing is how disciplined decision-making erodes. Tilt is invisible from the inside. Build detection rituals — including down-regulation techniques such as box breathing to quiet your nervous system before high-stakes calls.&nbsp;</p>
+      <div class="principle-tags">
+        <span class="tag" contenteditable="true">Emotional regulation</span>
+        <span class="tag" contenteditable="true">Meta-awareness</span>
+        <span class="tag" contenteditable="true"><br></span>
+      </div>
+    </div>
+  </article>
+
+  <!-- TEN ♦ -->
+  <article class="principle-card">
+    <div class="card-rank">
+      <div class="rank-corner" contenteditable="true">10<br>♦</div>
+      <span class="rank-numeral" contenteditable="true">10</span>
+      <span class="rank-suit" contenteditable="true">♦</span>
+      <div class="rank-corner-bottom" contenteditable="true">10<br>♦</div>
+    </div>
+    <div class="card-body">
+      <p class="principle-num" contenteditable="true">Principle 05</p>
+      <h3 class="principle-title" contenteditable="true">Table image is a strategic asset</h3>
+      <p class="principle-body" contenteditable="true">Consistent players earn respected folds. Executives with a disciplined track record get the benefit of the doubt — from CEOs, boards, peers, and markets. Reputation is accumulated slowly and spent quickly.</p>
+      <div class="principle-tags">
+        <span class="tag" contenteditable="true">Credibility capital</span>
+        <span class="tag" contenteditable="true">Consistency compounds</span>
+      </div>
+    </div>
+  </article>
+
+  <!-- ─── TRAPS ─── -->
+  <section class="traps-section">
+    <p class="section-label" contenteditable="true">Decision Science</p>
+    <h2 class="section-title" contenteditable="true">Mitigating the Common Traps</h2>
+    <div class="teal-rule"></div>
+
+    <div class="trap-grid">
+
+      <div class="trap-card">
+        <div class="trap-card-header">
+          <span class="trap-number" contenteditable="true">1</span>
+          <span class="trap-name" contenteditable="true">Confirmation Bias</span>
+        </div>
+        <div class="trap-card-body">
+          <p class="trap-what" contenteditable="true"><strong contenteditable="true">What it is:</strong> Favoring information that supports your existing belief</p>
+          <p class="trap-why" contenteditable="true"><strong contenteditable="true">Why it's dangerous:</strong> Leads to blind spots and overconfidence</p>
+          <div class="trap-fix">
+            <p class="trap-fix-label" contenteditable="true">The Fix</p>
+            <p class="trap-fix-text" contenteditable="true">Force disconfirming evidence. Assign someone to argue the opposite case.</p>
+            <em class="trap-fix-italic" contenteditable="true">"What would have to be true for this to be wrong?"</em>
+          </div>
+        </div>
+      </div>
+
+      <div class="trap-card">
+        <div class="trap-card-header">
+          <span class="trap-number" contenteditable="true">2</span>
+          <span class="trap-name" contenteditable="true">Anchoring Bias</span>
+        </div>
+        <div class="trap-card-body">
+          <p class="trap-what" contenteditable="true"><strong contenteditable="true">What it is:</strong> Overweighting the first piece of information — initial estimate, first opinion</p>
+          <p class="trap-why" contenteditable="true"><strong contenteditable="true">Why it's dangerous:</strong> Distorts judgment and narrows thinking</p>
+          <div class="trap-fix">
+            <p class="trap-fix-label" contenteditable="true">The Fix</p>
+            <p class="trap-fix-text" contenteditable="true">Generate independent inputs first. Have team members write down estimates before any discussion begins.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="trap-card">
+        <div class="trap-card-header">
+          <span class="trap-number" contenteditable="true">3</span>
+          <span class="trap-name" contenteditable="true">Overconfidence Bias</span>
+        </div>
+        <div class="trap-card-body">
+          <p class="trap-what" contenteditable="true"><strong contenteditable="true">What it is:</strong> Overestimating certainty or accuracy of your judgment</p>
+          <p class="trap-why" contenteditable="true"><strong contenteditable="true">Why it's dangerous:</strong> Underestimates risk and ignores contingencies</p>
+          <div class="trap-fix">
+            <p class="trap-fix-label" contenteditable="true">The Fix</p>
+            <p class="trap-fix-text" contenteditable="true">Use probability ranges instead of confident predictions.</p>
+            <em class="trap-fix-italic" contenteditable="true">"What's the % likelihood — and what would change it?"</em>
+          </div>
+        </div>
+      </div>
+
+      <div class="trap-card">
+        <div class="trap-card-header">
+          <span class="trap-number" contenteditable="true">4</span>
+          <span class="trap-name" contenteditable="true">Loss Aversion</span>
+        </div>
+        <div class="trap-card-body">
+          <p class="trap-what" contenteditable="true"><strong contenteditable="true">What it is:</strong> Avoiding losses more strongly than pursuing equivalent gains</p>
+          <p class="trap-why" contenteditable="true"><strong contenteditable="true">Why it's dangerous:</strong> Leads to risk avoidance and missed opportunities</p>
+          <div class="trap-fix">
+            <p class="trap-fix-label" contenteditable="true">The Fix — Reframe Both Ways</p>
+            <p class="trap-fix-text" contenteditable="true">Ask both: "What do we lose if we act?" and "What do we lose if we don't act?"</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="trap-card" style="grid-column: 1 / -1;">
+        <div class="trap-card-header">
+          <span class="trap-number" contenteditable="true">5</span>
+          <span class="trap-name" contenteditable="true">Sunk Cost Fallacy</span>
+        </div>
+        <div class="trap-card-body" style="display:flex; gap:20px; flex-wrap:wrap;">
+          <div style="flex:1; min-width:200px;">
+            <p class="trap-what" contenteditable="true"><strong contenteditable="true">What it is:</strong> Continuing a path because of past investment — time, money, or ego</p>
+            <p class="trap-why" contenteditable="true"><strong contenteditable="true">Why it's dangerous:</strong> Keeps teams stuck in bad decisions long after the evidence turns</p>
+          </div>
+          <div class="trap-fix" style="flex:1; min-width:200px;">
+            <p class="trap-fix-label" contenteditable="true">The Fix — "Today Decision" Test</p>
+            <p class="trap-fix-text" contenteditable="true">Reset the frame entirely.</p>
+            <em class="trap-fix-italic" contenteditable="true">"If we weren't already in this, would we choose it now?"</em>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /trap-grid -->
+
+    <!-- SHORTHAND -->
+    <div class="shorthand-section">
+      <p class="shorthand-title" contenteditable="true">Shorthand for Avoiding Traps</p>
+      <div class="shorthand-grid">
+        <div class="shorthand-item">
+          <span class="shorthand-bias" contenteditable="true">Confirmation</span>
+          <span class="shorthand-arrow" contenteditable="true">→</span>
+          <span class="shorthand-action" contenteditable="true">Challenge assumptions</span>
+        </div>
+        <div class="shorthand-item">
+          <span class="shorthand-bias" contenteditable="true">Anchoring</span>
+          <span class="shorthand-arrow" contenteditable="true">→</span>
+          <span class="shorthand-action" contenteditable="true">Separate inputs</span>
+        </div>
+        <div class="shorthand-item">
+          <span class="shorthand-bias" contenteditable="true">Overconfidence</span>
+          <span class="shorthand-arrow" contenteditable="true">→</span>
+          <span class="shorthand-action" contenteditable="true">Quantify uncertainty</span>
+        </div>
+        <div class="shorthand-item">
+          <span class="shorthand-bias" contenteditable="true">Loss Aversion</span>
+          <span class="shorthand-arrow" contenteditable="true">→</span>
+          <span class="shorthand-action" contenteditable="true">Reframe tradeoffs</span>
+        </div>
+        <div class="shorthand-item" style="grid-column: 1 / -1;">
+          <span class="shorthand-bias" contenteditable="true">Sunk Cost</span>
+          <span class="shorthand-arrow" contenteditable="true">→</span>
+          <span class="shorthand-action" contenteditable="true">Restart the decision</span>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+</main>
+
+<!-- FOOTER -->
+<footer class="page-footer">
+  <p class="footer-quote" contenteditable="true">Every decision is a bet. Play like a disciplined pro.&nbsp;</p>
+  <p class="footer-flush" contenteditable="true">♦ A · K · Q · J · 10</p>
+</footer>
+
+<script>
+function setVar(name, value) {
+  document.documentElement.style.setProperty(name, value);
+}
+
+let editing = false;
+
+function toggleEdit() {
+  editing = !editing;
+  const btn = document.getElementById('edit-toggle');
+  const toolbar = document.getElementById('toolbar');
+
+  btn.textContent = editing ? '✓ Done Editing' : '✎ Edit Mode';
+  btn.classList.toggle('active', editing);
+  toolbar.classList.toggle('visible', editing);
+
+  /* Target every leaf text node container on the page */
+  document.querySelectorAll(
+    'h1, h2, h3, p, span, em, strong, li, div.pre-item, ' +
+    'div.rank-corner, div.rank-corner-bottom'
+  ).forEach(el => {
+    /* Only make editable if it has direct text content (not just child elements) */
+    const hasText = [...el.childNodes].some(n => n.nodeType === 3 && n.textContent.trim());
+    const onlyBlockChildren = el.children.length > 0 && [...el.children].every(
+      c => getComputedStyle(c).display === 'block' || getComputedStyle(c).display === 'flex'
+    );
+    if (hasText || (!onlyBlockChildren && el.children.length === 0)) {
+      el.contentEditable = editing ? 'true' : 'false';
+    }
+  });
+
+  document.body.style.paddingTop = editing ? '54px' : '0';
+}
+</script>
+
+
+
+</body></html>
